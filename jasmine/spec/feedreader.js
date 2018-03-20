@@ -6,7 +6,7 @@
  * to ensure they don't run until the DOM is ready.
  */
 $(function() {
-	 // Test if feeds variable is defined & not empty
+	// Test if feeds variable is defined & not empty
 	describe('RSS Feeds', function() {
 		it('are defined', function() {
 			expect(allFeeds).toBeDefined();
@@ -41,7 +41,7 @@ $(function() {
 			testNames(feedNames[i]);
 		}
 
-});
+	});
 
 
 	/* Test for default hiding of menu & visibility changes on hamburger click  */
@@ -78,9 +78,10 @@ $(function() {
 
 		// check if at least one feed entry defined
 		it('should have at least one entry', function(done) {
-			const feed = document.getElementsByClassName('feed')[0];
-			const entryLink = feed.getElementsByClassName('entry-link')[0];
+			const feed = document.getElementsByClassName('feed');
+			const entryLink = feed[0].getElementsByClassName('entry-link')[0];
 			const entry = entryLink.getElementsByClassName('entry')[0];
+			expect(feed.length).not.toBe(0);
 			expect(entry).toBeDefined();
 			done();
 		});
@@ -102,14 +103,13 @@ $(function() {
 			loadFeed(0, function() {
 				const feed1 = document.getElementsByClassName('feed')[0];
 				entriesBefore = Array.from(feed1.getElementsByTagName('h2')).map(entry => entry.innerHTML);
+				// ...and get them after second feed loads, to compare the two
+				loadFeed(1, function() {
+					const feed2 = document.getElementsByClassName('feed')[0];
+					entriesAfter = Array.from(feed2.getElementsByTagName('h2')).map(entry => entry.innerHTML);
+					done();
+				});
 			});
-			// ...and get them after second feed loads, to compare the two
-			loadFeed(1, function() {
-				const feed2 = document.getElementsByClassName('feed')[0];
-				entriesAfter = Array.from(feed2.getElementsByTagName('h2')).map(entry => entry.innerHTML);
-				done();
-			});
-
 		});
 
 		it('should change on menu item click', function(done) {
